@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VERBITSKI</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;800&display=swap">
+<style>
+/* Layout: одна колонка по центру, тёмный бордовый бархат с тенями листвы, стеклянные блоки поверх */
+:root{
+  --bg:#1a0709; --bg-deep:#0f0405; --wine:#4a1419; --wine-soft:#6b2229;
+  --ink:#f6eeec; --muted:#c9b3b1; --faint:#8f7472;
+  --glass:rgba(255,235,235,.055); --glass-line:rgba(255,220,220,.13);
+  --display:"Montserrat","Helvetica Neue",Arial,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg-deep);color:var(--ink);font-family:var(--display);
+  font-weight:300;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+/* фон: градиент + «тени листвы» + шум */
+.scene{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(120% 80% at 15% 20%,#3a0f13 0%,transparent 60%),
+             radial-gradient(90% 70% at 85% 90%,#2a0a0d 0%,transparent 70%),
+             linear-gradient(160deg,#2b0b0e 0%,var(--bg) 45%,var(--bg-deep) 100%);}
+.leaf{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;mix-blend-mode:screen;
+  background:linear-gradient(90deg,transparent,rgba(130,45,50,.55),transparent);}
+.l1{width:140vw;height:16vh;left:-40vw;top:10vh;transform:rotate(58deg);animation:drift 18s ease-in-out infinite alternate}
+.l2{width:120vw;height:10vh;left:-50vw;top:40vh;transform:rotate(62deg);animation:drift 22s ease-in-out infinite alternate-reverse;opacity:.4}
+.l3{width:110vw;height:8vh;left:-30vw;top:70vh;transform:rotate(55deg);animation:drift 26s ease-in-out infinite alternate;opacity:.3}
+@keyframes drift{from{translate:-4vw 0}to{translate:6vw -3vh}}
+.grain{position:absolute;inset:0;opacity:.09;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.glow{position:fixed;width:520px;height:520px;border-radius:50%;pointer-events:none;z-index:1;
+  background:radial-gradient(circle,rgba(160,60,65,.18),transparent 65%);translate:-50% -50%;left:50%;top:30%;transition:left .6s ease-out,top .6s ease-out}
+
+.wrap{position:relative;z-index:2;max-width:1080px;margin:0 auto;
+  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+
+/* шапка */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;padding-block:14px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--bg-deep)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:12px 20px;border-radius:999px;background:rgba(26,7,9,.45);
+  backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);
+  border:1px solid var(--glass-line)}
+.brand{font-size:12px;letter-spacing:.32em;font-weight:500;color:var(--ink);text-decoration:none}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+nav a{font-size:10px;letter-spacing:.24em;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:999px;transition:background .3s,color .3s}
+nav a:hover,nav a:focus-visible{background:var(--glass);color:var(--ink);outline:none}
+
+/* hero */
+.hero{min-height:min(88vh,820px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-block:70px 40px}
+.eyebrow{font-size:clamp(10px,1.4vw,13px);letter-spacing:.45em;color:var(--muted);text-transform:uppercase;margin:0 0 26px}
+h1{font-weight:800;font-size:clamp(46px,11vw,128px);letter-spacing:.02em;line-height:1;margin:0;
+  background:linear-gradient(180deg,#fff 30%,#e7d3d1);-webkit-background-clip:text;background-clip:text;color:transparent}
+.rule{width:92px;height:1px;background:var(--ink);opacity:.7;margin:34px auto;transform-origin:center}
+.lead{font-size:clamp(20px,3vw,30px);font-weight:400;margin:0}
+.sub{color:var(--muted);font-size:clamp(14px,1.8vw,17px);margin:12px 0 0}
+.soon{color:var(--faint);letter-spacing:.2em;font-size:13px;margin:34px 0 0}
+
+/* появление при загрузке: начинаем с видимого состояния (blur→чётко) */
+.in{animation:rise 1.2s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:.15;filter:blur(12px);translate:0 18px}to{opacity:1;filter:none;translate:0 0}}
+.rule.in{animation:line 1.2s .55s cubic-bezier(.2,.7,.2,1) both}
+@keyframes line{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.d1{animation-delay:.1s}.d2{animation-delay:.3s}.d3{animation-delay:.75s}.d4{animation-delay:.95s}.d5{animation-delay:1.2s}.d6{animation-delay:1.4s}
+
+/* кнопки Telegram */
+.cta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:44px}
+.tg{position:relative;display:inline-flex;align-items:center;gap:14px;padding:14px 22px 14px 14px;border-radius:999px;
+  text-decoration:none;color:var(--ink);background:var(--glass);border:1px solid var(--glass-line);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);overflow:hidden;isolation:isolate;
+  transition:transform .4s cubic-bezier(.2,.7,.2,1),border-color .4s,box-shadow .4s}
+.tg::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;
+  background:linear-gradient(120deg,var(--wine-soft),var(--wine));opacity:0;transition:opacity .4s}
+.tg::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;z-index:-1;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.18),transparent);transform:skewX(-20deg);transition:left .8s}
+.tg:hover,.tg:focus-visible{transform:translateY(-3px);border-color:rgba(255,220,220,.3);box-shadow:0 18px 40px -16px rgba(0,0,0,.8),0 0 0 1px rgba(255,200,200,.05);outline:none}
+.tg:hover::before,.tg:focus-visible::before{opacity:1}
+.tg:hover::after{left:130%}
+.tg.primary{background:linear-gradient(120deg,rgba(107,34,41,.85),rgba(74,20,25,.85))}
+.ico{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;
+  background:rgba(255,240,240,.1);border:1px solid var(--glass-line)}
+.ico svg{width:20px;height:20px;fill:var(--ink)}
+.tg .t{display:flex;flex-direction:column;text-align:left;line-height:1.25}
+.tg .k{font-size:10px;letter-spacing:.24em;color:var(--muted);text-transform:uppercase}
+.tg .v{font-size:15px;font-weight:500}
+.arr{margin-left:6px;opacity:.6;transition:translate .4s,opacity .4s}
+.tg:hover .arr{translate:4px 0;opacity:1}
+
+/* секции */
+section{padding-block:70px}
+.label{font-size:11px;letter-spacing:.4em;color:var(--faint);text-transform:uppercase;margin:0 0 14px;text-align:center}
+h2{font-weight:600;font-size:clamp(26px,4vw,40px);letter-spacing:.04em;margin:0 0 14px;text-align:center;text-wrap:balance}
+.intro{max-width:58ch;margin:0 auto;color:var(--muted);text-align:center}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:44px}
+.card{position:relative;padding:28px 24px 26px;border-radius:24px;background:var(--glass);border:1px solid var(--glass-line);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);min-width:0;overflow:hidden;
+  transition:transform .5s cubic-bezier(.2,.7,.2,1),border-color .5s}
+.card::before{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(300px circle at var(--mx,50%) var(--my,0%),rgba(200,90,95,.18),transparent 60%);opacity:0;transition:opacity .4s}
+.card:hover{transform:translateY(-4px);border-color:rgba(255,220,220,.24)}
+.card:hover::before{opacity:1}
+.card h3{font-size:13px;letter-spacing:.3em;font-weight:500;margin:0 0 12px;text-transform:uppercase}
+.card p{margin:0;color:var(--muted);font-size:14.5px}
+.status{display:inline-flex;align-items:center;gap:8px;margin-top:20px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);
+  padding:6px 12px;border-radius:999px;border:1px solid var(--glass-line)}
+.dot{width:6px;height:6px;border-radius:50%;background:#d98a8f;box-shadow:0 0 0 0 rgba(217,138,143,.6);animation:pulse 2.2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(217,138,143,0)}100%{box-shadow:0 0 0 0 rgba(217,138,143,0)}}
+
+/* путь */
+.path{max-width:640px;margin:44px auto 0;display:grid;gap:12px}
+.step{display:grid;grid-template-columns:110px 1fr;gap:18px;align-items:start;padding:18px 22px;border-radius:20px;border:1px solid transparent;transition:background .4s,border-color .4s}
+.step:hover{background:var(--glass);border-color:var(--glass-line)}
+.step .when{font-size:10px;letter-spacing:.26em;color:var(--faint);text-transform:uppercase;padding-top:5px}
+.step .when.now{color:#e3a3a7}
+.step b{font-weight:500;display:block}
+.step span{color:var(--muted);font-size:14px}
+
+/* финал */
+.final{text-align:center;padding:56px 24px;border-radius:32px;background:linear-gradient(160deg,rgba(107,34,41,.35),rgba(26,7,9,.35));
+  border:1px solid var(--glass-line);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+footer{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:40px 34px;color:var(--muted)}
+.mark{font-weight:800;font-size:22px;color:var(--ink)}
+.sig{display:flex;align-items:center;gap:16px;font-size:11px;letter-spacing:.32em}
+.sig i{display:block;width:54px;height:1px;background:var(--muted)}
+
+@media (max-width:820px){.grid{grid-template-columns:1fr}}
+@media (max-width:560px){
+  nav{display:none}
+  .step{grid-template-columns:1fr;gap:4px}
+  .tg{width:100%}
+  section{padding-block:54px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="scene" aria-hidden="true"><div class="leaf l1"></div><div class="leaf l2"></div><div class="leaf l3"></div><div class="grain"></div></div>
+<div class="glow" id="glow" aria-hidden="true"></div>
+
+<div class="wrap">
+  <header>
+    <div class="bar in">
+      <a class="brand" href="#top">VERBITSKI</a>
+      <nav aria-label="Разделы">
+        <a href="#ideas">IDEAS</a><a href="#products">PRODUCTS</a><a href="#ecosystem">ECOSYSTEM</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <div class="hero">
+      <p class="eyebrow in d1">A new journey begins</p>
+      <h1 class="in d2">VERBITSKI</h1>
+      <div class="rule in"></div>
+      <p class="lead in d3">Создаю нечто большее.</p>
+      <p class="sub in d4">Моя экосистема. Мои продукты. Мой путь.</p>
+      <p class="soon in d5">Это только начало.</p>
+      <div class="cta in d6">
+        <a class="tg primary" href="https://t.me/daycode2" target="_blank" rel="noopener">
+          <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.7.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.5 13.2 1.8 11.8c-1-.3-1-1 .2-1.5l18.6-7.2c.9-.3 1.6.2 1.3 1.2z"/></svg></span>
+          <span class="t"><span class="k">Telegram-канал</span><span class="v">daycode2</span></span>
+          <span class="arr" aria-hidden="true">→</span>
+        </a>
+        <a class="tg" href="https://t.me/IDAY3" target="_blank" rel="noopener">
+          <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9zm0 2c-4.4 0-8 2.3-8 5.2V21h16v-1.8c0-2.9-3.6-5.2-8-5.2z"/></svg></span>
+          <span class="t"><span class="k">Написать лично</span><span class="v">@IDAY3</span></span>
+          <span class="arr" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+
+    <section id="ideas">
+      <p class="label">Ideas</p>
+      <h2>Что такое экосистема VERBITSKI</h2>
+      <p class="intro">Это набор продуктов и проектов, которые связаны одной идеей и одним автором. Каждый следующий шаг опирается на предыдущий. Сейчас всё в процессе: здесь можно следить, как это собирается.</p>
+    </section>
+
+    <section id="products">
+      <p class="label">Products</p>
+      <h2>Над чем идёт работа</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>Разработка</h3>
+          <p>Сайты, приложения и цифровые инструменты: от идеи до готового продукта.</p>
+          <span class="status"><span class="dot"></span>В процессе</span>
+        </article>
+        <article class="card">
+          <h3>Контент</h3>
+          <p>Канал, где я показываю путь изнутри: что делаю, что получается, что нет.</p>
+          <span class="status"><span class="dot"></span>Уже работает</span>
+        </article>
+        <article class="card">
+          <h3>Следующее</h3>
+          <p>Новые продукты экосистемы. Анонсы появятся первыми в Telegram-канале.</p>
+          <span class="status"><span class="dot"></span>Скоро</span>
+        </article>
+      </div>
+    </section>
+
+    <section id="ecosystem">
+      <p class="label">Ecosystem</p>
+      <h2>Путь</h2>
+      <div class="path">
+        <div class="step"><div class="when">Старт</div><div><b>Идея и фундамент</b><span>Формирую видение и первые проекты.</span></div></div>
+        <div class="step"><div class="when now">Сейчас</div><div><b>Сборка экосистемы</b><span>Запускаю продукты и связываю их между собой.</span></div></div>
+        <div class="step"><div class="when">Дальше</div><div><b>Открытие для всех</b><span>Полноценный запуск и новые направления.</span></div></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="final">
+        <p class="label">Будь рядом</p>
+        <h2>Следи за процессом</h2>
+        <p class="intro">Все новости и запуски сначала появляются в канале. По вопросам и сотрудничеству пиши напрямую.</p>
+        <div class="cta">
+          <a class="tg primary" href="https://t.me/daycode2" target="_blank" rel="noopener">
+            <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.7.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.5 13.2 1.8 11.8c-1-.3-1-1 .2-1.5l18.6-7.2c.9-.3 1.6.2 1.3 1.2z"/></svg></span>
+            <span class="t"><span class="k">Подписаться</span><span class="v">t.me/daycode2</span></span>
+            <span class="arr" aria-hidden="true">→</span>
+          </a>
+          <a class="tg" href="https://t.me/IDAY3" target="_blank" rel="noopener">
+            <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg></span>
+            <span class="t"><span class="k">Связаться</span><span class="v">@IDAY3</span></span>
+            <span class="arr" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span class="mark">V.</span>
+    <span class="sig">VERBITSKI <i></i></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var glow=document.getElementById('glow');
+  window.addEventListener('pointermove',function(e){glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px';},{passive:true});
+  document.querySelectorAll('.card').forEach(function(c){
+    c.addEventListener('pointermove',function(e){var r=c.getBoundingClientRect();
+      c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px');});
+  });
+})();
+</script>
+</body>
+</html>
